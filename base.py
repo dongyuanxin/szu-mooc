@@ -137,11 +137,12 @@ def watch():
 				time.sleep(plus_pos+random.choice([0.5,1.0,2.0]))
 			if return_top:
 				print("="*8,"重新开始","="*8)
-				return_top = false
+				return_top = False
 				time.sleep(30)
 				break
 			if if_log:
 				log_unfinish(_class['name'])
+		return_top = True
 	print("Watch all classes in Mooc")
 	
 if __name__=='__main__':
