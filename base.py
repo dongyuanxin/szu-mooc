@@ -99,7 +99,7 @@ def watch():
         DATA['section_id'] = _class['section_id']
         if_log = False
         video_pos = 0
-        check_pos = [0.9,0.65,0.35] # 复查点，防止传包过于频繁！！！
+        check_pos = [0.65] # 复查点，防止传包过于频繁！！！
         while video_pos < MAX_LEN:
             if len(check_pos) and video_pos > MAX_LEN * check_pos[-1]:
                 unfinish_id_list = []
