@@ -138,6 +138,7 @@ def watch():
 			if return_top:
 				print("="*8,"重新开始","="*8)
 				return_top = false
+				time.sleep(30)
 				break
 			if if_log:
 				log_unfinish(_class['name'])
