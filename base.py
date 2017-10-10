@@ -134,6 +134,7 @@ def watch():
             time.sleep(plus_pos+random.choice([0.5,1.0,2.0]))
         if if_log:
             log_unfinish(_class['name'])
-
+	print("Watch all classes in Mooc")
+	
 if __name__=='__main__':
     watch()
