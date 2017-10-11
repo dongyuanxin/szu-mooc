@@ -33,8 +33,6 @@ HEADERS = {
     'Origin':'http://www.uooc.net.cn',
     'Proxy-Connection':'keep-alive',
     'Referer':'http://www.uooc.net.cn/learn/index',
-    #'User-Agent':'Mozilla/5.0 (Windows NT 10.0; WOW64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/60.0.3112.101 Safari/537.36',
-    #'Cookie': 'uinfo=XbVIAfQqz0Y4uyps55hM0nHNS9QrI1AQdpxcf0QXWFQWz9wvJwD%2F2tEqdHiEC1nSLPs8EQLCl%2FjiXJblH1xNXIny; account=2592324965@qq.com; JSESSID=qft173qh0geurmoar6179dn7i6; _xsrf=74ec887520d113416054148fd9f1162c; user_ad_view_218.17.207.118=1; Hm_lvt_d1a5821d95582e27154fc4a1624da9e3=1505808995,1506492947,1507532618,1507535052; Hm_lpvt_d1a5821d95582e27154fc4a1624da9e3=1507535813; Hm_lvt_7c307a902207c45c0eaf86510e2c24a1=1505638725,1505709853,1506492953,1507532624; Hm_lpvt_7c307a902207c45c0eaf86510e2c24a1=1507535815'
     'User-Agent':None,
     'Cookie':None,
 }
@@ -69,7 +67,6 @@ def get_data(cid):
                     data['name'] = every_class['name']
                     if data['finished']!=1:
                         yield data
-                    # print(data)
             else:
                 for every_class in chapter['icon_list']:
                     data['resource_id'] = every_class['id']
@@ -118,15 +115,12 @@ def watch():
                         print(" " * 8 +str(_class['resource_id'])+str(unfinish_id_list))
                 plus_pos = 30 + random.random()
                 video_pos += plus_pos
-                # video_pos = 550+random.random()
                 try:
                     DATA['video_pos'] = str(video_pos)
                     answer = session.post(url=URL, data=DATA, headers=HEADERS).json()
                     print("    At",video_pos,"(after plus",plus_pos,"seconds )")
                     print("    Return",answer)
                     if answer['msg'] == "视频进度不能拖拽":
-                        # print("debug for msg")
-                        # print(answer['msg'])
                         return_top = True
                         break
                     if answer['code'] ==103 or len(answer['msg'])>0:
