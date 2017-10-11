@@ -86,64 +86,67 @@ def log_unfinish(class_name):
         fout.write(info)
 
 def watch():
-	return_top = False
-	while not return_top:
-		session = requests.Session()
-		reload()
-		class_set = get_data(CID)
-		for _class in class_set:
-			print("Watch",_class['name'])
-			DATA['network'] = random.choice(['4', '3'])
-			DATA['cid'] = CID
-			DATA['chapter_id'] = _class['chapter_id']
-			DATA['resource_id'] = _class['resource_id']
-			DATA['subsection_id'] = _class['subsection_id']
-			DATA['section_id'] = _class['section_id']
-			if_log = False
-			video_pos = 0
-			check_pos = [0.65] # 复查点，防止传包过于频繁！！！
-			while video_pos < MAX_LEN:
-				if len(check_pos) and video_pos > MAX_LEN * check_pos[-1]:
-					unfinish_id_list = []
-					time.sleep(5) # 等待服务器缓冲
-					next_class = get_data(CID)
-					check_pos.pop()
-					for i in next_class:
-						unfinish_id_list.append(i['resource_id'])
-					if _class['resource_id'] not in unfinish_id_list:
-						print(" " * 8 + "start watching next")
-						break
-					else:
-						print(" " * 8 +str(_class['resource_id'])+str(unfinish_id_list))
-				plus_pos = 30 + random.random()
-				video_pos += plus_pos
-				try:
-					DATA['video_pos'] = str(video_pos)
-					answer = session.post(url=URL, data=DATA, headers=HEADERS).json()
-					print("    At",video_pos,"(after plus",plus_pos,"seconds )")
-					print("    Return",answer)
-					if answer['data']['finished'] == 1:
-						break
-					if answer['code'] ==103 or len(answer['msg'])>0:
-						if_log = True
-						break
-					if answer['msg'] == '视频进度不能拖拽'
-						return_top = True
-						break
-				except Exception as error:
-					print("    error is:",error)
-					if_log = True
-					break
-				time.sleep(plus_pos+random.choice([0.5,1.0,2.0]))
-			if return_top:
-				print("="*8,"重新开始","="*8)
-				return_top = False
-				time.sleep(30)
-				break
-			if if_log:
-				log_unfinish(_class['name'])
-		return_top = True
-	print("Watch all classes in Mooc")
-	
+    return_top = False
+    while not return_top:
+        session = requests.Session()
+        reload()
+        class_set = get_data(CID)
+        for _class in class_set:
+            print("Watch",_class['name'])
+            DATA['network'] = random.choice(['4', '3'])
+            DATA['cid'] = CID
+            DATA['chapter_id'] = _class['chapter_id']
+            DATA['resource_id'] = _class['resource_id']
+            DATA['subsection_id'] = _class['subsection_id']
+            DATA['section_id'] = _class['section_id']
+            if_log = False
+            video_pos = 0
+            check_pos = [0.65] # 复查点，防止传包过于频繁！！！
+            while video_pos < MAX_LEN:
+                if len(check_pos) and video_pos > MAX_LEN * check_pos[-1]: # 防止后台数据同步慢，重新访问show.html
+                    unfinish_id_list = []
+                    time.sleep(5) # 等待服务器缓冲
+                    next_class = get_data(CID)
+                    check_pos.pop()
+                    for i in next_class:
+                        unfinish_id_list.append(i['resource_id'])
+                    if _class['resource_id'] not in unfinish_id_list:
+                        print(" " * 8 + "start watching next")
+                        break
+                    else:
+                        print(" " * 8 +str(_class['resource_id'])+str(unfinish_id_list))
+                plus_pos = 30 + random.random()
+                video_pos += plus_pos
+                try:
+                    DATA['video_pos'] = str(video_pos)
+                    answer = session.post(url=URL, data=DATA, headers=HEADERS).json()
+                    print("    At",video_pos,"(after plus",plus_pos,"seconds )")
+                    print("    Return",answer," and msg in answer is",answer['msg'])
+                    if answer['data']['finished'] == 1:
+                        break
+                    if answer['code'] ==103 or len(answer['msg'])>0:
+                        if_log = True
+                        break
+                    if answer['msg'] == '视频进度不能拖拽':
+                        print(answer['msg'])
+                        return_top = True
+                        break
+
+                except Exception as error:
+                    print("    error is:",error)
+                    if_log = True
+                    break
+                time.sleep(plus_pos+random.choice([0.5,1.0,2.0]))
+            if return_top:
+                print("=" * 8, "start again", "=" * 8)
+                time.sleep(30)
+                break
+
+            if if_log:
+                log_unfinish(_class['name'])
+        return_top = False
+    if not return_top:
+        print("Watch all mooc")
+
 if __name__=='__main__':
     watch()
