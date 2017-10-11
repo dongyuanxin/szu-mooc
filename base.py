@@ -125,11 +125,12 @@ def watch():
                     print("    At",video_pos,"(after plus",plus_pos,"seconds )")
                     print("    Return",answer)
                     if answer['msg'] == "视频进度不能拖拽":
-                        print("debug for msg")
-                        print(answer['msg'])
+                        # print("debug for msg")
+                        # print(answer['msg'])
                         return_top = True
                         break
                     if answer['code'] ==103 or len(answer['msg'])>0:
+                        time.sleep(plus_pos+random.choice([0.1,0.2,0.4,0.8,1.6]))
                         if_log = True
                         break
                     if answer['data']['finished'] == 1:
@@ -138,7 +139,7 @@ def watch():
                     print("    error is:",error)
                     if_log = True
                     break
-                time.sleep(plus_pos+random.choice([0.5,1.0,2.0]))
+                time.sleep(plus_pos+random.choice([0.1,0.2,0.4,0.8,1.6]))
             if return_top:
                 print("\n","=" * 8, "start again", "=" * 8,"\n")
                 time.sleep(30)
