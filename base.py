@@ -86,12 +86,13 @@ def log_unfinish(class_name):
         fout.write(info)
 
 def watch():
-    return_top = False
-    while not return_top:
+    return_top = True
+    while return_top:
         session = requests.Session()
         reload()
         class_set = get_data(CID)
         for _class in class_set:
+            return_top = False
             print("Watch",_class['name'])
             DATA['network'] = random.choice(['4', '3'])
             DATA['cid'] = CID
@@ -117,34 +118,34 @@ def watch():
                         print(" " * 8 +str(_class['resource_id'])+str(unfinish_id_list))
                 plus_pos = 30 + random.random()
                 video_pos += plus_pos
+                # video_pos = 550+random.random()
                 try:
                     DATA['video_pos'] = str(video_pos)
                     answer = session.post(url=URL, data=DATA, headers=HEADERS).json()
                     print("    At",video_pos,"(after plus",plus_pos,"seconds )")
-                    print("    Return",answer," and msg in answer is",answer['msg'])
-                    if answer['data']['finished'] == 1:
+                    print("    Return",answer)
+                    if answer['msg'] == "视频进度不能拖拽":
+                        print("debug for msg")
+                        print(answer['msg'])
+                        return_top = True
                         break
                     if answer['code'] ==103 or len(answer['msg'])>0:
                         if_log = True
                         break
-                    if answer['msg'] == '视频进度不能拖拽':
-                        print(answer['msg'])
-                        return_top = True
+                    if answer['data']['finished'] == 1:
                         break
-
                 except Exception as error:
                     print("    error is:",error)
                     if_log = True
                     break
                 time.sleep(plus_pos+random.choice([0.5,1.0,2.0]))
             if return_top:
-                print("=" * 8, "start again", "=" * 8)
+                print("\n","=" * 8, "start again", "=" * 8,"\n")
                 time.sleep(30)
                 break
-
             if if_log:
                 log_unfinish(_class['name'])
-        return_top = False
+
     if not return_top:
         print("Watch all mooc")
 
